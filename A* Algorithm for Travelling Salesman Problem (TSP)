@@ -1,0 +1,104 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+const int N = 4;
+
+int graph[N][N] = {
+    {0,10,15,20},
+    {10,0,35,25},
+    {15,35,0,30},
+    {20,25,30,0}
+};
+
+struct Node {
+    vector<int> path;
+    vector<bool> visited;
+    int cost;
+    int city;
+
+    bool operator>(const Node& other) const {
+        return cost > other.cost;
+    }
+};
+
+void tspAStar(int start) {
+
+    priority_queue<Node,
+                   vector<Node>,
+                   greater<Node>> pq;
+
+    Node root;
+
+    root.path.push_back(start);
+    root.visited.resize(N,false);
+
+    root.visited[start] = true;
+    root.cost = 0;
+    root.city = start;
+
+    pq.push(root);
+
+    int minCost = 1e9;
+    vector<int> bestPath;
+
+    while(!pq.empty()) {
+
+        Node current = pq.top();
+        pq.pop();
+
+        if(current.path.size() == N) {
+
+            int totalCost =
+                current.cost +
+                graph[current.city][start];
+
+            if(totalCost < minCost) {
+
+                minCost = totalCost;
+
+                bestPath = current.path;
+                bestPath.push_back(start);
+            }
+
+            continue;
+        }
+
+        for(int i=0;i<N;i++) {
+
+            if(!current.visited[i]) {
+
+                Node next = current;
+
+                next.path.push_back(i);
+                next.visited[i] = true;
+
+                next.cost +=
+                    graph[current.city][i];
+
+                next.city = i;
+
+                pq.push(next);
+            }
+        }
+    }
+
+    cout << "Minimum Cost: "
+         << minCost << endl;
+
+    cout << "Best Path: ";
+
+    for(int city : bestPath)
+        cout << city << " ";
+
+    cout << endl;
+}
+
+int main() {
+
+    tspAStar(0);
+
+    return 0;
+}
