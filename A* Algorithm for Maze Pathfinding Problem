@@ -1,0 +1,103 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+#define ROW 3
+#define COL 4
+
+struct Node {
+    int x, y;
+    int g, h, f;
+
+    bool operator>(const Node& other) const {
+        return f > other.f;
+    }
+};
+
+int maze[ROW][COL] = {
+    {1,1,1,0},
+    {0,1,1,1},
+    {0,1,0,1}
+};
+
+int goalX = 2;
+int goalY = 3;
+
+bool isValid(int x, int y) {
+    return (x >=0 && x < ROW && y >=0 && y < COL
+            && maze[x][y] == 1);
+}
+
+int heuristic(int x, int y) {
+    return abs(x - goalX) + abs(y - goalY);
+}
+
+void aStar(int startX, int startY) {
+
+    priority_queue<Node, vector<Node>, greater<Node>> pq;
+
+    vector<vector<bool>> visited(ROW,
+            vector<bool>(COL,false));
+
+    Node start;
+    start.x = startX;
+    start.y = startY;
+    start.g = 0;
+    start.h = heuristic(startX,startY);
+    start.f = start.g + start.h;
+
+    pq.push(start);
+
+    int dx[] = {-1,1,0,0};
+    int dy[] = {0,0,-1,1};
+
+    while(!pq.empty()) {
+
+        Node current = pq.top();
+        pq.pop();
+
+        int x = current.x;
+        int y = current.y;
+
+        if(x == goalX && y == goalY) {
+            cout << "Goal Reached!" << endl;
+            return;
+        }
+
+        visited[x][y] = true;
+
+        cout << "Visited: (" << x << "," << y << ")" << endl;
+
+        for(int i=0;i<4;i++) {
+
+            int newX = x + dx[i];
+            int newY = y + dy[i];
+
+            if(isValid(newX,newY) &&
+               !visited[newX][newY]) {
+
+                Node neighbor;
+
+                neighbor.x = newX;
+                neighbor.y = newY;
+                neighbor.g = current.g + 1;
+                neighbor.h = heuristic(newX,newY);
+                neighbor.f = neighbor.g + neighbor.h;
+
+                pq.push(neighbor);
+            }
+        }
+    }
+
+    cout << "No Path Found!" << endl;
+}
+
+int main() {
+
+    aStar(0,0);
+
+    return 0;
+}
