@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main() {
+
+    string userInput;
+
+    cout << "===== Customer Chatbot =====\n";
+
+    while(true) {
+
+        cout << "\nYou: ";
+        getline(cin, userInput);
+
+        // Greetings
+        if(userInput == "hello" ||
+           userInput == "hi") {
+
+            cout << "Bot: Hello! How can I help you?";
+        }
+
+        // Product Information
+        else if(userInput == "product") {
+
+            cout << "Bot: We sell laptops, mobiles and accessories.";
+        }
+
+        // Service Details
+        else if(userInput == "service") {
+
+            cout << "Bot: We provide delivery and repair services.";
+        }
+
+        // Price Query
+        else if(userInput == "price") {
+
+            cout << "Bot: Prices start from Rs. 10,000.";
+        }
+
+        // FAQ
+        else if(userInput == "timing") {
+
+            cout << "Bot: Our shop is open from 9 AM to 9 PM.";
+        }
+
+        // Exit
+        else if(userInput == "bye") {
+
+            cout << "Bot: Thank you! Visit again.";
+            break;
+        }
+
+        // Default reply
+        else {
+
+            cout << "Bot: Sorry, I don't understand.";
+        }
+    }
+
+    return 0;
+}
